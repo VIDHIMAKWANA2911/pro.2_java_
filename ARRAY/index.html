@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+<script>
+// 1. Push methods //////////
+ 
+let aa1 = ["potato" , "tomato" , "carrot" , "corn"]
+console.log(aa1)
+
+arr1.push ("brinjal")
+console.log(arr1)
+
+// 2. pop methods ///////////
+
+let aa2 = ["potato" , "tomato" , "carrot" , "corn", "radish"]
+aa2.pop ()
+console.log(aa2)
+
+// 3. shift methods //////////
+
+let aa3 = ["potato" , "tomato" , "carrot" , "corn" , "radish" , "peas"]
+aa3.shift("")
+console.log(aa3)
+
+// 4. unshift methods ////////
+
+let aa4 =  ["potato" , "tomato" , "carrot" , "corn" , "radish" , "peas"]
+aa4.unshift("spinach")
+console.log(aa4)
+
+// 5. splice methods ///////////
+
+// delete krva ////////
+
+let aa5 = ["potato" , "tomato" , "carrot" , "corn" , "radish" , "peas" , "spinach" , "peas" , "birnjal","onion"]
+console.log(aa5)
+
+aa5.splice(2 , 3)
+console.log(aa5)
+
+// add krva ////
+
+let aa6 =  ["potato" , "tomato" , "carrot" , "corn" , "radish" , "peas" , "spinach" , "peas" , "birnjal","onion"]
+console.log(aa6)
+
+aa7.splice(2 , 3 , "bean")
+console.log(array7)
+
+// 6. slice methods /////////
+
+let aa8 = ["potato" , "tomato" , "carrot" , "corn" , "radish" , "peas" , "spinach" , "peas" , "birnjal","onion"]
+console.log(aa8)
+let a = aa8.slice(4 ,7)
+console.log(a)
+
+// 7. indexof  ////////
+
+let aa9 = ["potato" , "tomato" , "carrot" , "corn" , "radish" , "peas" , "spinach" , "peas" , "birnjal","onion"]
+let b = aa9.indexOf("ginger")
+console.log(b)
+
+// 8. sort ///////
+
+let aa10 = ["potato" , "tomato" , "carrot" , "corn" , "radish" , "peas" , "spinach" , "peas" , "birnjal","onion"]
+aa10.sort()
+console.log(aa10)
+
+// 9. revers  ////////
+
+let aa11 =["potato" , "tomato" , "carrot" , "corn" , "radish" , "peas" , "spinach" , "peas" , "birnjal","onion"]
+array6.reverse()
+console.log(aa11)
+
+// 10. concat  ////////
+
+let  aa = [5,6,7,8]
+let  bb = [1,2,3,4]
+let  cc = aa.concat(bb)
+console.log(cc)
+
+// 11. include  //////////
+
+let aa12 = ["potato" , "tomato" , "carrot" , "corn" , "radish" , "peas" , "spinach" , "peas" , "birnjal","onion"]
+let da = aa12.includes("chili")
+console.log(da)
+
+// 12. Join  ////////
+
+let aa13 = ["potato" , "tomato" , "carrot" , "corn" , "radish" , "peas" , "spinach" , "peas" , "birnjal","onion"]
+let E = aa13.join(";")
+console.log(E)
+
+// 13 . foreach... ////////
+let fruits = ['potato', 'tomato', 'carrot'];
+fruits.forEach((fruit, index) => {
+    console.log(`${index}: ${fruit}`);
+});
+
+// 14. map ..... /////////
+
+const fru1 = ['potato', 'tomato', 'carrot'];
+const indexedFruits = fru1.map((fruit, index) => `${index}: ${fruit}`);
+console.log(indexedFruits);
+
+//  15. reduce ..... //////////
+
+let Number = [1 , 2 , 3 , 4 , 5]
+    
+    let bm = Number.reduce((a,b)=>{
+        return a+b })
+        console.log(bm)
+
+ // 16 . filter ....  //////////   
+        
+let filter2 = [{Name:"riya patel" , ages :15 ,grade :70}, 
+        {Name:"jiya panchal" , ages:24 , grade:79},
+        {Name:"vruti panchal" , ages:29 , grade:68},
+         {Name:"harvi panchal" , ages:16 , grade:90},
+          {Name:"hiya panchal" , ages:12 , grade:565},
+           {Name:"roshni panchal" , ages:20 , grade:88},
+    ]
+
+    let gb = filter2.filter((ele) => {
+        return ele.grade <= 90
+    })
+    document.write(gb)
+
+</script>
+
+
+
