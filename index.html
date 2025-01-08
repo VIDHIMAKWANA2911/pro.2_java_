@@ -1,174 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <script src="index.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OOP Concept Program List</title>
+  </head>
+  <body>
+    <script>
+      // --------------------------------(1)-------------------------------
+      class User {
+        constructor(username, surname, age, salary, qualifications) {
+          this.username = username;
+          this.surname = surname;
+          this.age = age;
+          this.salary = salary;
+          this.qualifications = qualifications;
+        }
+
+        display() {
+          document.write(`Username: ${this.username} <br>`);
+          document.write(`Surname: ${this.surname} <br>`);
+          document.write(`Age: ${this.age} <br>`);
+          document.write(`Salary: ${this.salary} <br>`);
+          document.write("Qualifications:");
+          this.qualifications.forEach((qualification) => {
+            document.write(`- ${qualification} <br>`);
+          });
+        }
+      }
+
+      let user = new User("Aman", "Doe", 25, 5000, [
+        "10th",
+        "12th",
+        "BCA",
+        "MCA",
+      ]);
+      user.display();
+
+      // --------------------------------(2)-------------------------------
+      const object = {
+        username: "Aman",
+        surname: "Doe",
+        age: 25,
+        salary: 5000,
+        qualifications: ["10th", "12th", "BCA", "MCA"],
+      };
+
+      let count = 0;
+
+      for (let x in object) {
+        count++;
+      }
+
+      document.write("<hr>Number of keys in the object:", count);
+
+      // --------------------------------(3)-------------------------------
+
+      document.write("<br><hr>First Method to print " + object.username);
+      document.write("<br><br>Second Method to print " + object["username"]);
+
+      // --------------------------------(4)-------------------------------
+      const student = {
+        name: "Mayur",
+        age: 20,
+        marks: [85, 90, 95, 80, 75],
+        averageMarks: function () {
+          const sum = this.marks.reduce((total, mark) => total + mark, 0);
+          const average = sum / this.marks.length;
+          return average;
+        },
+
+        print: function () {
+          document.write("<br><hr>Student Details:");
+          document.write("<br>Name:" + this.name);
+          document.write("<br>Age:" + this.age);
+          document.write("<br>Marks:" + this.marks);
+          document.write("<br>Average Marks:" + this.averageMarks());
+        },
+      };
+
+      // --------------------------------(5)-------------------------------
+      // document.addEventListener("keydown", function (event) {
+      //   const key = event.key;
+      //   const keyCode = event.keyCode || event.which;
+
+      //   // Check if the key is an alphabet (a-z or A-Z)
+      //   if (
+      //     (keyCode >= 65 && keyCode <= 90) ||
+      //     (keyCode >= 97 && keyCode <= 122)
+      //   ) {
+      //     // Allow the key press
+      //     document.write("Allowed: " + key);
+      //   } else {
+      //     // Prevent the key press
+      //     event.preventDefault();
+      //     document.write("Not allowed: " + key);
+      //   }
+      // });
+
+      // --------------------------------(6)-------------------------------
+
+      // --------------------------------(7)-------------------------------
+      class vehicle {
+        constructor(name, type, tyre, engine) {
+          this.name = name;
+          this.type = type;
+          this.tyre = tyre;
+          this.engine = engine;
+        }
+
+        info() {
+          document.write("<hr>Vehicle Name is " + this.name + "<br>");
+          document.write("Vehicle Type is " + this.type + "<br>");
+          document.write("Vehicle Tyre is " + this.tyre + "<br>");
+          document.write("Vehicle Engine Capacity is " + this.engine + "<br>");
+        }
+      }
+
+      let car1 = new vehicle("Thar", "SUV", "Tubeless", "2148 cc");
+      car1.info();
+
+      let car2 = new vehicle("Alto", "Hatchback", "Tubeless", "800 cc");
+      car2.info();
+
+      let car3 = new vehicle(
+        "Chevrolet Corvette",
+        "Sports Car",
+        "Radial Tyre",
+        "6161 cc"
+      );
+      car3.info();
+    </script>
+  </body>
 </html>
-<script>
-    let months = "November";
-if(months == "january" || months == "March" || months == "May"|| months=="July"|| months=="August"|| months=="October" || months =="December"){
-  console.log("TOTAL DAY 31");
-}else if(months=="April"||months=="June"||months=="September"||months=="November"){
-  console.log("TOTAL DAY 30");
-}else if (months=="February"){
-   console.log("TOTAL DAY 28/29");
-}else{
-  console.log("INVALID MONTH");
-}
-
-// *******************************************************
-
-let mode="yellow";
-let color;
-if(mode==="white"){
-  color="white";
-}else if(mode==="blue"){
-  color="blue";
-}else if(mode==="pink"){
-  color="pink";
-}else if(mode==="green"){
-  color="green";
-}else{
-  color="Black";
-}
-console.log(color);
-
-
-//********************************************************** */
-
-let purchaseAmount =780;
-
-if (purchaseAmount >= 500) {
-  console.log("You get a 20% discount!");
-} else if (purchaseAmount >= 300) {
-  console.log("You get a 10% discount!");
-} else if (purchaseAmount >= 100) {
-  console.log("You get a 5% discount!");
-} else {
-  console.log("No discount available.");
-}
-
-
-//************************************************************//
-
-
-let age = 28;
-let income = 45000;
-
-if (age < 18) {
-  console.log("Not eligible for a loan. Minimum age is 18.");
-} else if (income >= 50000) {
-  console.log("You are eligible for a premium loan.");
-} else if (income >= 30000) {
-  console.log("You are eligible for a standard loan.");
-} else {
-  console.log("Not eligible for a loan.");
-}
-
-
-//*********************************************************************//
-
-let trafficLight = "green";
-
-if (trafficLight === "green") {
-  console.log("You can go! The light is green.");
-} else if (trafficLight === "yellow") {
-  console.log("Slow down! The light is yellow.");
-} else if (trafficLight === "red") {
-  console.log("Stop! The light is red.");
-} else {
-  console.log("Invalid traffic light color.");
-}
-
-
-//*********************************************************************//
-
-let hour = 14; 
-
-if (hour < 12) {
-  console.log("Good morning!");
-} else if (hour < 18) {
-  console.log("Good afternoon!");
-} else {
-  console.log("Good evening!");
-}
-
-
-
-//************************************************************************//
-
-let temperature =6 ; // Temperature in degrees Celsius
-
-if (temperature > 30) {
-  console.log("Wear light clothing.");
-} else if (temperature >= 20) {
-  console.log("Wear comfortable clothes.");
-} else if (temperature >= 10) {
-  console.log("Wear a jacket.");
-} else {
-  console.log("wear a coat!");
-}
-
-
-//***********************************************************************//
-
-let marks = 85;
-
-if (marks >= 90) {
-  console.log("Grade A: Excellent!");
-} else if (marks >= 75) {
-  console.log("Grade B: Good job!");
-} else if (marks >= 60) {
-  console.log("Grade C: You passed.");
-} else if (marks >= 50) {
-  console.log("Grade D: pass.");
-} else {
-  console.log("Grade E: Failed. ");
-}
-
-
-//************************************************************************//
-
-
-let number = 15;
-
-if (number % 3 === 0 && number % 5 === 0) {
-  console.log("The number is divisible by  3 and 5.");
-} else if (number % 3 === 0) {
-  console.log("The number is divisible by 3.");
-} else if (number % 5 === 0) {
-  console.log("The number is divisible by 5.");
-} else {
-  console.log("The number is not divisible by 3 or 5.");
-}
-
-//**************************************************************************//
-
-let aa = 50
-let bb = 100
-let cc = 150
-
-if(aa>bb && aa>cc){
-  console.log("AA is  maximum")
-}else if (bb>aa && bb>cc){
-  console.log("BB is maximum")
-}else{
-  console.log("cc is maximum")
-}
-
-// ***********************************************************************//
-
-let year = 2054
-
-if(year%4==0){
-  console.log("leap year")
-}else{
-  console.log("not leap year")
-}
-
-</script>
