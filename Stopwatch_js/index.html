@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stopwatch</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: black;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+        color: white;
+      }
+      .stopwatchs {
+        padding: 20px;
+        text-align: center;
+        background-color: black;
+        border-radius: 5px;
+        box-shadow: 0px 6px 10px #007bff;
+        height: 300px;
+        width: 800px; 
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 1.4rem;
+        margin: 0 10px;
+      }
+
+      #watch {
+        font-size: 5rem;
+        margin-top:60px;
+        color: white;
+      }
+
+      button:hover {
+        background-color: black;
+      }
+
+      #watch {
+        font-size: 7rem; 
+        margin-bottom: 30px;
+        color: white;
+      }
+
+      button {
+        font-size: 1.6rem; /* Slightly larger buttons */
+        margin-top:20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stopwatchs">
+      <h1>STOP<span>WATCH</span></h1>
+      <div id="watch">00:00:00</div>
+      <div>
+        <button id="start_btn">START</button>
+        <button id="stop_btn">STOP</button>
+        <button id="reset_btn">RESET</button>
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+  let timer;
+  let seconds = 0;
+  let minutes = 0;
+  let hour = 0;
+
+  const updateDisplay = () => {
+    document.getElementById("watch").innerHTML = `${hour
+      .toString()
+      .padStart(2, "0")} : ${minutes.toString().padStart(2, "0")} : ${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  document.getElementById("start_btn").addEventListener("click", () => {
+    timer = setInterval(() => {
+      seconds++;
+      if (seconds === 60) {
+        seconds = 0;
+        minutes++;
+      }
+      if (minutes === 60) {
+        minutes = 0;
+        hour++;
+      }
+      updateDisplay();
+    }, 1000);
+  });
+  document.getElementById("stop_btn").addEventListener("click", () => {
+    clearInterval(timer);
+  });
+
+  document.getElementById("reset_btn").addEventListener("click", () => {
+    clearInterval(timer);
+    seconds = 0;
+    minutes = 0;
+    hour = 0;
+    updateDisplay();
+  });
+  updateDisplay();
+</script>
