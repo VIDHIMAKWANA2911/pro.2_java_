@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="weather">
+        <h4>Name: <span id="name"></span></h4>
+        <h4>Region:<span id="region"></span></h4>
+        <h4>Country: <span id="Country"></span></h4>
+        <h4>Lat: <span id="lat"></span></h4>
+        <h4>Lon: <span id="lon"></span></h4>
+        <h4>Tz_id : <span id="tz_id"></span></h4>
+        <h4>Localtime_epoch : <span id="localtime_epoch"></span></h4>
+        <h4>Localtime : <span id="localtime"></span></h4>
+        <h4>Last_updated_epoch : <span id="last_updated_epoch"></span></h4>
+        <h4>Last_updated : <span id="last_updated"></span></h4>
+        <h4>Temp_C : <span id="temp_c"></span></h4>
+        <h4>Temp_F : <span id="temp_f"></span></h4>
+        <h4>Icon : <img src="" alt="" id="icon_img"></h4>
+        <h4>Text : <span id="text"></span></h4>
+        <h4>Code : <span id="code"></span></h4>
+    </div>
+</body>
+</html>
+<script>
+    fetch("https://api.weatherapi.com/v1/current.json?key=b3c8abc55c9845818a060615240506&q=London")
+    .then((res) => res.json())
+    .then((data) => { 
+     console.log(data);
+        document.getElementById("name").innerHTML = data.location.name
+        document.getElementById("region").innerHTML = data.location.region
+        document.getElementById("Country").innerHTML = data.location.country
+        document.getElementById("lat").innerHTML = data.location.lat
+        document.getElementById("lon").innerHTML = data.location.lon
+        document.getElementById("tz_id").innerHTML = data.location.tz_id
+        document.getElementById("localtime_epoch").innerHTML = data.location.localtime_epoch
+        document.getElementById("localtime").innerHTML = data.location.localtime
+        document.getElementById("last_updated_epoch").innerHTML = data.current.last_updated_epoch
+        document.getElementById("last_updated").innerHTML = data.current.last_updated
+        document.getElementById("temp_c").innerHTML = data.current.temp_c
+        document.getElementById("temp_f").innerHTML = data.current.temp_f
+        let img = document.getElementById("icon_img")
+        img.src = data.current.condition.icon
+        document.getElementById("text").innerHTML = data.current.condition.text
+        document.getElementById("code").innerHTML = data.current.condition.code
+
+    })
+    .catch((err) => console.log(err))
+
+</script>

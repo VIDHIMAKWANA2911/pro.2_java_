@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {  
+            font-family: Arial, sans-serif;  
+            background-color: #f8f9fa;  
+            margin: 0;  
+            padding: 20px;  
+        }  
+
+        #card {  
+            display: flex;  
+            flex-wrap: wrap;  
+            gap: 30px;  
+            justify-content: center;  
+        }  
+
+        .product {  
+            border: 1px solid #e2e2e2;  
+            border-radius: 10px;  
+            width: 250px;  
+            text-align: center;  
+            background: #ffffff;  
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);  
+            transition: transform 0.2s;  
+        }  
+
+        .product:hover {  
+            transform: scale(1.05);  
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);  
+        }  
+
+        img {  
+            height: 150px;  
+            width: 100%;  
+            object-fit: cover;  
+            border-top-left-radius: 10px;  
+            border-top-right-radius: 10px;  
+        }  
+
+        h3 {  
+            font-size: 1.2em;  
+            color: #333;  
+            margin-top: 10px;  
+        }  
+
+        .description {  
+            padding: 10px;  
+            font-size: 0.9em;  
+            color: #666;  
+            height:70px; 
+            overflow:hidden;  
+        }  
+
+        .price {  
+            font-size: 1.2em;  
+            color: #28a745;  
+            margin-bottom: 15px;  
+        }  
+
+        .category{
+          font-size: 1.2rem;
+          font-family: Verdana, Geneva, Tahoma, sans-serif;
+          font-weight: 600;
+          margin-bottom: 10px; 
+        }
+        .rate{
+          font-size: 1.2rem;
+          color: blue;
+        }
+
+        @media (max-width: 600px) {  
+            #card {  
+                justify-content: flex-start;  
+            }  
+        }  
+    </style>
+  </head>
+  <body>
+    <div id="card"></div>
+  </body>
+</html>
+<script>
+  fetch("https://fakestoreapi.com/products")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+
+      let card = document.getElementById("card");
+
+      data.forEach((ele) => {
+        let productDiv = document.createElement("div");
+        productDiv.className = "product";
+
+        let img = document.createElement("img");
+        img.src = ele.image;
+        img.alt = ele.title;
+
+        let card = document.getElementById("card");
+        card.appendChild(img);
+
+        let desc = document.createElement("p");
+        desc.innerHTML = ele.description;
+        desc.className = "description"; 
+        card.appendChild(desc);
+
+        let cate = document.createElement("p");
+        cate.innerHTML = ele.category;
+        cate.className = "category"
+        card.appendChild(cate);
+
+        let title = document.createElement("h3");
+        title.innerHTML = ele.title;
+        card.appendChild(title);
+
+        let price = document.createElement("p");
+        price.innerHTML = ele.price;
+        price.className = "price"
+        card.appendChild(price);
+
+        let rate = document.createElement("p");
+        rate.innerHTML = ele.rating.rate;
+        rate.className = "rate"
+        card.appendChild(rate);
+
+
+        productDiv.appendChild(img);
+        productDiv.appendChild(title);
+        productDiv.appendChild(desc);
+        productDiv.appendChild(price);
+        productDiv.appendChild(cate);
+        productDiv.appendChild(rate);
+
+        card.appendChild(productDiv);
+      });
+    })
+    .catch((err) => console.log(err));
+</script>

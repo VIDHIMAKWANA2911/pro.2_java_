@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    #img{
+            height:100px;
+            width: 100px;
+        }
+    #img img{
+            height:100px;
+            width:100px;
+        }
+  </style>
+  <body>
+    <div>
+      <div id="img">
+        <img src="https://img.freepik.com/free-photo/portrait-beautiful-young-brunette-cafe_1153-6678.jpg" alt="" id="user_img" />
+      </div>
+      <p> Name : <span id="title">Mrs.</span> <span id="first">Ava</span> <span id="last">Davies</span></p>
+      <p>Gender : <span id="Gender">Female</span></p>
+      <p>EmailID : <span id="Email">Ava356@gamil.com</span></p>
+      <p>DOB : <span id="date">367893</span></p>
+      <p>Age : <span id="age">34</span></p>
+      <p>Street : <span id="number">34567894</span> <span id="name">Johnson</span></p>
+      <p>City : <span id="city">Glasgow:</span></p>
+      <p>Country : <span id="Country">Uk</span></p>
+      <p>Phone : <span id="phone">7965255841</span></p>
+    </div>
+    <br>
+    <button id="change_user">Change user</button>
+  </body>
+</html>
+<script>
+ document.getElementById("change_user").addEventListener("click" , () => {       
+     fetch("https://randomuser.me/api/")
+    .then((res) => res.json())
+    .then((data) => {
+      //console.log(data.results[0]);
+      document.getElementById("user_img").src = data.results[0].picture.large;
+      document.getElementById("title").innerHTML = data.results[0].name.title;
+      document.getElementById("first").innerHTML = data.results[0].name.first;
+      document.getElementById("last").innerHTML = data.results[0].name.last;
+      document.getElementById("Gender").innerHTML = data.results[0].gender;
+      document.getElementById("Email").innerHTML = data.results[0].email;
+      document.getElementById("date").innerHTML = data.results[0].dob.date;
+      document.getElementById("age").innerHTML = data.results[0].dob.age;
+      document.getElementById("city").innerHTML = data.results[0].location.city;
+      document.getElementById("Country").innerHTML =data.results[0].location.country;
+      document.getElementById("phone").innerHTML = data.results[0].phone;
+      document.getElementById("number").innerHTML = data.results[0].location.street.number;
+      document.getElementById("name").innerHTML = data.results[0].location.street.name;
+    })
+    .catch((err) => console.log(err))
+ })
+ 
+</script>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Sr no.</th>
+          <th>timestamp</th>
+          <th>totalSamplesTested</th>
+          <th>totalPositiveCases</th>
+        </tr>
+      </thead>
+      <tbody id="tabledata"></tbody>
+    </table>
+  </body>
+</html>
+<script>
+  fetch("https://api.rootnet.in/covid19-in/stats/testing/raw")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data.data);
+      let tr = "";
+      data.data.map((ele, index) => {
+        tr += `<tr>
+                <th>${ele.timestamp}</th>
+                <th>${ele.totalSamplesTested}</th>
+                <th>${ele.totalSamplesTested}</th>
+                <th>${ele.totalPositiveCases}</th>
+             </tr>`;
+      });
+      document.getElementById("tabledata").innerHTML = tr;
+    })
+    .catch((err) => console.log(err));
+</script>

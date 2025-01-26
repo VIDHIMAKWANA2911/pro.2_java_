@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table border="1px"> 
+        <thead>
+            <tr>
+                <th>Sr No.</th>
+                <th>Name</th>
+                <th>E-mail</th>
+                <th>Body</th>
+            </tr>
+        </thead>
+        <tbody id="tabledata">
+
+        </tbody>
+    </table>
+</body>
+</html>
+<script>
+    fetch("https://jsonplaceholder.typicode.com/comments")
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data)
+        let tr = "";
+        data.map((ele,index) => {
+            tr += 
+            `<tr>
+                <td>${index + 1}</td>
+                <td>${ele.name}</td>
+                <td>${ele.email}</td>
+                <td>${ele.body}</td>
+            </tr>`
+        })
+        document.getElementById("tabledata").innerHTML = tr ;
+    })
+    .catch((Err) => console.log(Err))
+</script>
