@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazon-like Store</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 0 0px;
+      }
+
+      /* First Header with logo, searchbar, and cart icon */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #333;
+        color: #fff;
+        padding: 15px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      .search-bar {
+        flex: 1;
+        margin: 0 20px;
+      }
+
+      .search-bar input {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+      }
+
+      .cart-icon {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .cart-icon span {
+        background: red;
+        color: #fff;
+        border-radius: 50%;
+        font-size: 0.8rem;
+        padding: 2px 6px;
+        position: absolute;
+        top: -10px;
+        right: -10px;
+      }
+
+      /* Second Header for category navigation */
+      #category-header {
+        display: flex;
+        justify-content: space-around;
+        background-color: #232f3e;
+      }
+
+      #category-header a {
+        color: white;
+        text-decoration: none;
+        font-size: 1rem;
+        padding: 10px;
+        transition: background-color 0.3s;
+      }
+
+      #category-header a:hover {
+        background-color: #007bff;
+        border-radius: 15px;
+      }
+
+      /* Category section */
+      #categories {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        margin: 20px 0;
+      }
+
+      .category {
+        margin-bottom: 30px;
+      }
+
+      .category h2 {
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+        color: #333;
+      }
+
+      .category-products {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .product {
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        background: #fff;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .product:hover {
+        transform: scale(1.08);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .product img {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+        object-fit: contain;
+        margin-bottom: 15px;
+        border-radius: 8px;
+      }
+
+      .product p {
+        margin: 10px 0;
+        font-size: 1.2rem;
+        color: #555;
+      }
+
+      .add-to-cart {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .add-to-cart:hover {
+        background-color: #0056b3;
+      }
+
+      /* Cart modal */
+      #cart-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 500px;
+        background: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+        z-index: 1001;
+      }
+
+      #cart-modal h2 {
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+      }
+
+      #cart-modal ul {
+        list-style: none;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      #cart-modal ul li {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+      }
+
+      #cart-modal ul li img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+
+      #cart-modal ul li span {
+        font-size: 1rem;
+      }
+
+      #cart-modal p {
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      #cart-modal button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #cart-modal button:hover {
+        background-color: #0056b3;
+      }
+
+      #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- First Header with Logo, Searchbar, and Cart Icon -->
+    <header>
+      <h1>Amazon-like Store</h1>
+      <div class="search-bar">
+        <input type="text" placeholder="Search products..." />
+      </div>
+      <div class="cart-icon" id="cart-icon">
+        🛒 <span id="cart-count">0</span>
+      </div>
+    </header>
+
+    <!-- Category Header -->
+    <div id="category-header">
+      <a href="#" onclick="filterCategory('Electronics')">Electronics</a>
+      <a href="#" onclick="filterCategory('Groceries')">Groceries</a>
+      <a href="#" onclick="filterCategory('Fashion')">Fashion</a>
+      <a href="#" onclick="filterCategory('Toys')">Toys</a>
+      <a href="#" onclick="filterCategory('Kidsware')">Kid's fashion</a>
+      <a href="#" onclick="filterCategory('Watches')">Watch</a>
+      <a href="#" onclick="filterCategory('Bags')">Bags</a>
+      <a href="#" onclick="filterCategory('Footwear')">Footwear</a>
+    </div>
+
+    <!-- Categories and Products will be populated here -->
+    <div id="categories"></div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal">
+      <h2>Your Cart</h2>
+      <ul id="cart-items"></ul>
+      <p>Total Price: $<span id="cart-total">0</span></p>
+      <button id="close-cart">Close</button>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay"></div>
+
+  </body>
+</html>
+<script>
+      let products = [
+        {
+          category: "Electronics",
+          name: "Phone",
+          price: 500,
+          image:
+            "https://m.media-amazon.com/images/I/81T3olLXpUL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Headphones",
+          price: 100,
+          image:
+            "https://m.media-amazon.com/images/I/51FNnHjzhQL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Laptop",
+          price: 500,
+          image:
+            "https://m.media-amazon.com/images/I/71NfES5o1WL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "TV",
+          price: 400,
+          image:
+            "https://m.media-amazon.com/images/I/717oSOB4hCL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "refrigerator",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/517L8yb12SL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Oven",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/81uYdKDNEUL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "juicer grinder",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/71ILbzE8DuL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "SumsungA25Ultra",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/71lD7eGdW-L._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Airfry",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/61bZtvcTZLL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Juicers",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/71JA+gsaMiL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "refrigerator",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/61ZX+36YjmL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Iron",
+          price: 800,
+          image:
+            "https://m.media-amazon.com/images/I/419PZbSxT2L._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Electric Kettle",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/71PD3HugE9L._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Sandwich Maker",
+          price: 900,
+          image: "https://m.media-amazon.com/images/I/71d7Ecvk6qL._SX679_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "stove",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/51i8WoGZciL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Washing Machine",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/81B7XtNFTtL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Fans",
+          price: 700,
+          image:
+            "https://m.media-amazon.com/images/I/515ceyK8k-L._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "I-phone",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/71CSc3M2AGL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: " Hand Blender",
+          price: 900,
+          image:
+            "https://m.media-amazon.com/images/I/310pwc6M9wL._AC_UY327_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Electronics",
+          name: "Cool touch kettle",
+          price: 900,
+          image: "https://m.media-amazon.com/images/I/61KtE7qf7DL._SX679_.jpg",
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        {
+          category: "Groceries",
+          name: "Cornflakes",
+          price: 50,
+          image:
+            "https://m.media-amazon.com/images/I/81SDdn2l4HL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Chips",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/71+bz5i4SDL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "maggie",
+          price: 40,
+          image:
+            "https://m.media-amazon.com/images/I/61Nge+2s2fL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Poha",
+          price: 60,
+          image:
+            "https://m.media-amazon.com/images/I/610AaD9VQcL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Dishwash liquid",
+          price: 79,
+          image:
+            "https://m.media-amazon.com/images/I/610DprJKeRL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Turmeric Soap ",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/71k+vczVn9L._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Kissan Mixed Fruit Jam",
+          price: 68,
+          image:
+            "https://m.media-amazon.com/images/I/51NJJNAATTL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Choco Almond",
+          price: 100,
+          image:
+            "https://m.media-amazon.com/images/I/61Z3297spJL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Colgate MaxFresh Toothpaste",
+          price: 40,
+          image:
+            "https://m.media-amazon.com/images/I/71xkMu6uJtL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Surface Cleaner Liquid",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/71lr26CFLdL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Pasta",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/71AVeSj2CHL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: " Room Fresheners",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/415gOarBr1L._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Seedless Kishmish",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/61eMslXEBgL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Clazkit Multi-Purpose",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/6101YnG4yLL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: " Chana Dal Besan",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/81N-mEgb7VL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Mustard Oil",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/41nH9Miwk9L._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Box Plastic Container",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/81D8kI5xlpL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Toor Dal",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/71P6oRYdPCL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Biscuits",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/616UF5LJcqL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Groceries",
+          name: "Dark Fantasy Choco ",
+          price: 20,
+          image:
+            "https://m.media-amazon.com/images/I/51HDRdNLU-L._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Plain Round ",
+          price: "678",
+          image:
+            "https://m.media-amazon.com/images/I/71HBNT3R66L._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: " Henley Neck Full Sleeve Solid ",
+          price: "745",
+          image:
+            "https://m.media-amazon.com/images/I/61hy9jLQoaL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Neck Long Sleeves Sweater for Winter",
+          price: "456",
+          image: "https://m.media-amazon.com/images/I/718TY-hIjiL._SX679_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Leriya Fashion Women Dress",
+          price: "412",
+          image:
+            "https://m.media-amazon.com/images/I/61MAkgcofoL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Formal",
+          price: "456",
+          image:
+            "https://m.media-amazon.com/images/I/71CjUPaBfjL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Western Official Formal Shirts for Women",
+          price: "452",
+          image:
+            "https://m.media-amazon.com/images/I/61LjnC8A0QL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Silk Icon",
+          price: "458",
+          image:
+            "https://m.media-amazon.com/images/I/417mKxYeunS._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Leriya Fashion Western Dress",
+          price: "452",
+          image:
+            "https://m.media-amazon.com/images/I/51GpW5Sh0IL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Straight Kurta for Women & Girl's",
+          price: "458",
+          image: "https://m.media-amazon.com/images/I/51ra8hWYjRL.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Printed Multicolor Shirt",
+          price: "562",
+          image:
+            "https://m.media-amazon.com/images/I/71QwBEM-vnL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Kurta With Pant",
+          price: "452",
+          image:
+            "https://m.media-amazon.com/images/I/61D7nbhylBL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "TAGAS Men's Regular Jacket",
+          price: "999",
+          image:
+            "https://m.media-amazon.com/images/I/61+vlw4aZaL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "C J Enterprise Women's",
+          price: "456",
+          image:
+            "https://m.media-amazon.com/images/I/71ijWXSADuL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Blazer Set for Women",
+          price: "452",
+          image: "https://m.media-amazon.com/images/I/51tVAa54o+L._SY879_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Collar Solid Men Jacket",
+          price: "125",
+          image:
+            "https://m.media-amazon.com/images/I/31UM7n03gOL._AC_UF480,600_SR480,600_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Regular Fit Stylish Formal Full Sleeve Blazer ",
+          price: "523",
+          image: "https://m.media-amazon.com/images/I/51tNKueBpxL._SX679_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Casual Polyester Jacket for Biker",
+          price: "1236",
+          image:
+            "https://m.media-amazon.com/images/I/31BWwW+MJFL._AC_UF480,600_SR480,600_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "Tunic Ankle Length Dress",
+          price: "857",
+          image:
+            "https://m.media-amazon.com/images/I/51FP2DJF0eL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "TOPLOT jacket for men ",
+          price: "999",
+          image: "https://m.media-amazon.com/images/I/61EtFyskGfL._SY879_.jpg",
+        },
+        {
+          category: "Fashion",
+          name: "casual jacket for men",
+          price: "457",
+          image:
+            "https://m.media-amazon.com/images/I/613UsfIhKsL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+
+        //////////////////////////////////////////////////////////////////////
+        {
+          category: "Toys",
+          name: "Fosters Steam Learning&Education",
+          price: "526",
+          image:
+            "https://m.media-amazon.com/images/I/61vhn0x0LgL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Teddy Bear",
+          price: "452",
+          image:
+            "https://m.media-amazon.com/images/I/31yo5zSaOYL._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Kids Dancing Cactus Toys Can Sing Wriggle ",
+          price: "452",
+          image:
+            "https://m.media-amazon.com/images/I/41q3TCgjvML._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Toys for Kids Multicolor",
+          price: "569",
+          image:
+            "https://m.media-amazon.com/images/I/41fJsF397GL._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Goyal's Angel Girl Musical",
+          price: "457",
+          image:
+            "https://m.media-amazon.com/images/I/41UbqtnGdVL._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Goyal's Dancing Frog Toy ",
+          price: "457",
+          image:
+            "https://m.media-amazon.com/images/I/41uOlL-yMuL._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Monkey Tummy Time Sound Toy",
+          price: "457",
+          image:
+            "https://m.media-amazon.com/images/I/91MIzFR7lcL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Toddler Baby ",
+          price: "256",
+          image: "https://m.media-amazon.com/images/I/41mEM+jLZhL._SX522_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Mini Explorer Rabbit Ride ",
+          price: "458",
+          image:
+            "https://m.media-amazon.com/images/I/41K9QGfXbqL._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: " Tent House",
+          price: "568",
+          image:
+            "https://m.media-amazon.com/images/I/41XNwtGtHbL._SY300_SX300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Electric Jeep Battery Car",
+          price: "9999",
+          image:
+            "https://m.media-amazon.com/images/I/713tdcXoEyL._AC_UL480_FMwebp_QL65_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Baby car",
+          price: "523",
+          image:
+            "https://m.media-amazon.com/images/I/41UguHiK44L._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Airplane",
+          price: "4523",
+          image:
+            "https://m.media-amazon.com/images/I/51H3iYjgZxL._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Piano for Babies",
+          price: "475",
+          image:
+            "https://m.media-amazon.com/images/I/510EmyxhA5L._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Cable World Infant Colourful Plastic",
+          price: "523",
+          image:
+            "https://m.media-amazon.com/images/I/41Yslh1M54L._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Gym Fitness Rack",
+          price: "569",
+          image:
+            "https://m.media-amazon.com/images/I/41KkSubzV1L._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Laptop Toy",
+          price: "562",
+          image:
+            "https://m.media-amazon.com/images/I/51kIZ1MHIlL._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Kids Animal ",
+          price: "523",
+          image:
+            "https://m.media-amazon.com/images/I/31cd+95XwmL._SY300_SX300_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Ball for kids",
+          price: "452",
+          image:
+            "https://m.media-amazon.com/images/I/51bu0GiPJWL._SX300_SY300_QL70_FMwebp_.jpg",
+        },
+        {
+          category: "Toys",
+          name: "Future Shop Pack ",
+          price: "236",
+          image: "https://m.media-amazon.com/images/I/31KoGjh7alL.jpg",
+        },
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+
+        {
+          category: "Kidsware",
+          name: "KiCO Kids Woolen T-shirt and Pant Se",
+          price: "452",
+          image:
+            "https://images.meesho.com/images/products/374162491/vpwjr_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Baby Girls Clothes",
+          price: "125",
+          image:
+            "https://images.meesho.com/images/products/488583182/tahkp_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Girls Winter Wear Hoodie And Pajama Set",
+          price: "963",
+          image:
+            "https://images.meesho.com/images/products/439702425/bo8fx_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Trending Boys Army",
+          price: "125",
+          image:
+            "https://images.meesho.com/images/products/408056370/qsdve_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Pink jacket white top with pink skirt",
+          price: "521",
+          image:
+            "https://images.meesho.com/images/products/406183674/e8dyy_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Baby girl kids stylish denim Clothing set",
+          price: "451",
+          image:
+            "https://images.meesho.com/images/products/451697974/zpr7v_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Flawsome Girls Top & Pant",
+          price: "253",
+          image:
+            "https://images.meesho.com/images/products/445046074/lp6dv_512.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "kids stylish t-shirt & pant set",
+          price: "150",
+          image:
+            "https://images.meesho.com/images/products/333935751/brmuq_512.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Modern Stylus Girls Top & Bottom Sets",
+          price: "236",
+          image:
+            "https://images.meesho.com/images/products/379220977/kcsws_512.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Modern Trendy Girls Frocks & Dresses",
+          price: "526",
+          image:
+            "https://images.meesho.com/images/products/378210838/vdywl_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "BOYS TOP AND BOTTOM SET",
+          price: "693",
+          image:
+            "https://images.meesho.com/images/products/278150986/ukfcc_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Pretty Trendy Girls Top & Bottom Sets",
+          price: "521",
+          image:
+            "https://images.meesho.com/images/products/406174034/tizme_512.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Tinkle Fancy Boys Top & Bottom Sets",
+          price: "542",
+          image:
+            "https://images.meesho.com/images/products/410517162/9j266_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Baby Girls Styles Cotton Blend Top and Pant Seats",
+          price: "223",
+          image:
+            "https://images.meesho.com/images/products/435560208/s6clr_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Cartoon girls top bottom set",
+          price: "212",
+          image:
+            "https://images.meesho.com/images/products/282419518/lr3tf_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "matching top and bottom set kids",
+          price: "256",
+          image:
+            "https://images.meesho.com/images/products/356359733/g5u6y_512.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "KIDS CLOTHING SET",
+          price: "589",
+          image:
+            "https://images.meesho.com/images/products/354443959/wxftu_512.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Cutiepie Funky Girls Top & Bottom Sets",
+          price: "99",
+          image:
+            "https://images.meesho.com/images/products/365372861/qp4mk_512.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Kids Girls Styles Top & Pant",
+          price: "524",
+          image:
+            "https://images.meesho.com/images/products/382773007/6koho_400.webp",
+        },
+        {
+          category: "Kidsware",
+          name: "Suit Short Sleeve Shirt Kid ",
+          price: "589",
+          image:
+            "https://images.meesho.com/images/products/412455343/8966l_400.webp",
+        },
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        {
+          category: "Watches",
+          name: "Digital new Women's Watches",
+          price: "452",
+          image:
+            "https://images.meesho.com/images/products/224744888/vxchf_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "Digital watch",
+          price: "999",
+          image:
+            "https://images.meesho.com/images/products/478190478/ienvi_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "Men Wrist Watch",
+          price: "524",
+          image:
+            "https://images.meesho.com/images/products/12345774/40e9f_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "EVOLVES MULTI-COLOR COMBO WATCH",
+          price: "527",
+          image:
+            "https://images.meesho.com/images/products/95021279/0mttu_512.webp",
+        },
+        {
+          category: "Watches",
+          name: "Watches For Men",
+          price: "214",
+          image:
+            "https://images.meesho.com/images/products/291102846/evhbt_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "Elite Men Analog Watches",
+          price: "254",
+          image:
+            "https://images.meesho.com/images/products/402965303/e31uk_512.webp",
+        },
+        {
+          category: "Watches",
+          name: "Voguish Men Analog Watches",
+          price: "236",
+          image:
+            "https://images.meesho.com/images/products/376039730/46m40_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "NEW ARRIVAL BLACK SEFAR BELT WATCH FOR MEN",
+          price: "569",
+          image:
+            "https://images.meesho.com/images/products/248575351/dh66q_400.webp",
+        },
+        {
+          category: "Watches",
+          name: " Black Tow Tone Dial PU Analog Men's Watch",
+          price: "246",
+          image:
+            "https://images.meesho.com/images/products/437516430/n5fk1_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "Women's Watch",
+          price: "214",
+          image:
+            "https://images.meesho.com/images/products/393695456/imfzp_512.webp",
+        },
+        {
+          category: "Watches",
+          name: "Stylish Beautiful Watch For Girl Or Women",
+          price: "124",
+          image:
+            "https://images.meesho.com/images/products/390471728/8wuro_512.webp",
+        },
+        {
+          category: "Watches",
+          name: "Women Analog Watches",
+          price: "526",
+          image:
+            "https://images.meesho.com/images/products/61717536/mhs4a_512.webp",
+        },
+        {
+          category: "Watches",
+          name: "Stylish Bracelet Womens Watches",
+          price: "456",
+          image:
+            "https://images.meesho.com/images/products/481676916/4euxp_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "Stylish Diamond Studded Watches",
+          price: "452",
+          image:
+            "https://images.meesho.com/images/products/473079312/q1rsb_512.webp",
+        },
+        {
+          category: "Watches",
+          name: "Mikado Classy Couple watches",
+          price: "569",
+          image:
+            "https://images.meesho.com/images/products/18931651/ijvqh_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "Watches",
+          price: "451",
+          image:
+            "https://images.meesho.com/images/products/473079312/q1rsb_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "Gold Stainless Steel Girls Womens Watches",
+          price: "256",
+          image:
+            "https://images.meesho.com/images/products/442431530/eavcp_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "Digital Watch",
+          price: "548",
+          image:
+            "https://images.meesho.com/images/products/473321530/fmyxr_400.webp",
+        },
+        {
+          category: "Watches",
+          name: "Fashionate Sports Watches",
+          price: "256",
+          image:
+            "https://images.meesho.com/images/products/275675737/6fkut_512.webp",
+        },
+        {
+          category: "Watches",
+          name: "stylish watches",
+          price: "245",
+          image:
+            "https://images.meesho.com/images/products/123342133/bbdli_400.webp",
+        },
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        {
+          category: "Bags",
+          name: "Mini Small Women college bags",
+          price: "562",
+          image:
+            "https://images.meesho.com/images/products/396802354/yw5ah_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "zara bags",
+          price: "452",
+          image:
+            "https://images.meesho.com/images/products/375241078/2gsrd_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "rabit backpackn",
+          price: "125",
+          image:
+            "https://images.meesho.com/images/products/367456006/l9sym_512.webp",
+        },
+        {
+          category: "Bags",
+          name: "Strolley Duffel bags",
+          price: "256",
+          image:
+            "https://images.meesho.com/images/products/126993844/jzdym_512.webp",
+        },
+        {
+          category: "Bags",
+          name: "New style sling bag",
+          price: "452",
+          image:
+            "https://images.meesho.com/images/products/358456068/ncmip_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "Butterfly stylish sling bag",
+          price: "125",
+          image:
+            "https://images.meesho.com/images/products/450307696/to7dv_512.webp",
+        },
+        {
+          category: "Bags",
+          name: "Cross Body Bags ",
+          price: "856",
+          image:
+            "https://images.meesho.com/images/products/285760576/sqkuo_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "Women Slingbags",
+          price: "452",
+          image:
+            "https://images.meesho.com/images/products/168477127/ycakx_512.webp",
+        },
+        {
+          category: "Bags",
+          name: "Mithras ProGear Sling Bag",
+          price: "147",
+          image:
+            "https://images.meesho.com/images/products/485993111/scv0p_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "Stylish Shoulder Men",
+          price: "145",
+          image:
+            "https://images.meesho.com/images/products/328957014/umm71_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "Sling For Women’s",
+          price: "412",
+          image:
+            "https://images.meesho.com/images/products/284225094/tckwj_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "Fashionable Sling Bags",
+          price: "123",
+          image:
+            "https://images.meesho.com/images/products/430293014/xoeur_512.webp",
+        },
+        {
+          category: "Bags",
+          name: "Ravishing Stylish Women Backpacks",
+          price: "156",
+          image:
+            "https://images.meesho.com/images/products/342686758/lzokz_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "New Sling bag",
+          price: "452",
+          image:
+            "https://images.meesho.com/images/products/400211113/pmkgt_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "Girls Stylish maroon singleful",
+          price: "852",
+          image:
+            "https://images.meesho.com/images/products/177113191/oluhu_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "Bag For Women",
+          price: "145",
+          image:
+            "https://images.meesho.com/images/products/474382443/j1fcw_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "Girls Travel Bag ",
+          price: "145",
+          image:
+            "https://images.meesho.com/images/products/454701757/lfu9u_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "Women Handbags",
+          price: "125",
+          image:
+            "https://images.meesho.com/images/products/25534784/d10ce_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "wd-Duffel Bags",
+          price: "526",
+          image:
+            "https://images.meesho.com/images/products/193902622/31zme_400.webp",
+        },
+        {
+          category: "Bags",
+          name: "Attractive Women DARK Brown Handbag Big size",
+          price: "145",
+          image:
+            "https://images.meesho.com/images/products/60876969/qkkrz_400.webp",
+        },
+
+        ///////////////////////////////////////////////////////////////////////////////////////
+
+        {
+          category: "Footwear",
+          name: "Neck Sneakers",
+          price: "1456",
+          image:
+            "https://images.meesho.com/images/products/429457683/aap7r_512.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Led light shoes white",
+          price: "1452",
+          image:
+            "https://images.meesho.com/images/products/471788028/cdtvy_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Kids lightening Shoes",
+          price: "123",
+          image:
+            "https://images.meesho.com/images/products/411074319/emhmi_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: " Girls Sports Shoe",
+          price: "1236",
+          image:
+            "https://images.meesho.com/images/products/284601379/h9u78_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Black Sports Shoes",
+          price: "1263",
+          image:
+            "https://images.meesho.com/images/products/54151475/t6f06_512.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Sneakers Shoes For Girl And Women",
+          price: "1256",
+          image:
+            "https://images.meesho.com/images/products/409196789/aqadi_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Shoes ",
+          price: "128",
+          image:
+            "https://images.meesho.com/images/products/385081070/xjl2k_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Stylish Bout Shoes",
+          price: "1254",
+          image:
+            "https://images.meesho.com/images/products/464521072/mh5aj_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Sports Shoes",
+          price: "1247",
+          image:
+            "https://images.meesho.com/images/products/469928859/cmxky_512.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Heels Footwear",
+          price: "1457",
+          image:
+            "https://images.meesho.com/images/products/485856208/vbon8_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Footwear",
+          price: "1456",
+          image:
+            "https://images.meesho.com/images/products/415160308/lu832_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Men Black Sandal",
+          price: "1478",
+          image:
+            "https://images.meesho.com/images/products/157963221/x8j1g_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Stylish Trending & Latest",
+          price: "1526",
+          image:
+            "https://images.meesho.com/images/products/422553709/bchaf_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "sleeper",
+          price: "1285",
+          image:
+            "https://images.meesho.com/images/products/413527507/wiloo_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: " Sandals Mens",
+          price: "145",
+          image:
+            "https://images.meesho.com/images/products/105360484/gknrv_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Men Casual Navy sandal",
+          price: "785",
+          image:
+            "https://images.meesho.com/images/products/298183384/efxnp_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Sports Flipflop and Slipper",
+          price: "478",
+          image:
+            "https://images.meesho.com/images/products/300210169/5pz9g_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Trendy Men's Flip-Flops Slippers Slides",
+          price: "256",
+          image:
+            "https://images.meesho.com/images/products/450069143/nkbla_400.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Shoes For Men",
+          price: "12256",
+          image:
+            "https://images.meesho.com/images/products/473616392/apsus_512.webp",
+        },
+        {
+          category: "Footwear",
+          name: "Bersache Men Blue Sports Running Shoes",
+          price: "163",
+          image:
+            "https://images.meesho.com/images/products/14340384/ab3bc_400.webp",
+        },
+      ];
+
+      let cart = [];
+      const categoriesDiv = document.getElementById("categories");
+      const cartCount = document.getElementById("cart-count");
+      const cartItems = document.getElementById("cart-items");
+      const cartTotal = document.getElementById("cart-total");
+      const cartModal = document.getElementById("cart-modal");
+      const overlay = document.getElementById("overlay");
+
+      const groupedProducts = products.reduce((acc, product) => {
+        if (!acc[product.category]) acc[product.category] = [];
+        acc[product.category].push(product);
+        return acc;
+      }, {});
+
+      function renderProducts(category) {
+        categoriesDiv.innerHTML = "";
+
+        const categoryDiv = document.createElement("div");
+        categoryDiv.classList.add("category");
+        categoryDiv.innerHTML = `<h2>${category}</h2>`;
+
+        const productsDiv = document.createElement("div");
+        productsDiv.classList.add("category-products");
+
+        groupedProducts[category].forEach((product) => {
+          const productDiv = document.createElement("div");
+          productDiv.classList.add("product");
+          productDiv.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" />
+            <p>${product.name}</p>
+            <p>$${product.price}</p>
+            <button class="add-to-cart">Add to Cart</button>
+          `;
+          productDiv
+            .querySelector(".add-to-cart")
+            .addEventListener("click", () => addToCart(product));
+          productsDiv.appendChild(productDiv);
+        });
+
+        categoryDiv.appendChild(productsDiv);
+        categoriesDiv.appendChild(categoryDiv);
+      }
+      function addToCart(product) {
+        cart.push(product);
+        updateCart();
+      }
+
+      function updateCart() {
+        cartItems.innerHTML = "";
+        cart.forEach((item) => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <img src="${item.image}" alt="${item.name}"/>
+            <span>${item.name} - $${item.price}</span>
+          `;
+          cartItems.appendChild(li);
+        });
+        cartCount.textContent = cart.length;
+        cartTotal.textContent = cart.reduce((sum, item) => sum + item.price, 0);
+      }
+
+      document.getElementById("cart-icon").addEventListener("click", () => {
+        cartModal.style.display = "block";
+        overlay.style.display = "block";
+      });
+
+      document.getElementById("close-cart").addEventListener("click", () => {
+        cartModal.style.display = "none";
+        overlay.style.display = "none";
+      });
+
+      function filterCategory(category) {
+        renderProducts(category);
+      }
+
+      renderProducts("Electronics");
+    </script>
